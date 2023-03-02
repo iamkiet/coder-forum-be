@@ -23,7 +23,7 @@ const getPostComments = async (req, res) => {
     .limit(limit)
     .skip(skip);
 
-  res.status(200).json({ data: comments });
+  return res.status(200).json({ data: comments });
 };
 
 const getReplies = async (req, res) => {
@@ -34,7 +34,7 @@ const getReplies = async (req, res) => {
     .limit(limit)
     .skip(skip);
 
-  res.status(200).json({ data: replies });
+  return res.status(200).json({ data: replies });
 };
 
 module.exports = { create, getPostComments, getReplies };

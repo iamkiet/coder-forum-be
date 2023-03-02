@@ -8,7 +8,7 @@ const registerController = async (req, res) => {
     const { full_name, email, password } = req.body;
 
     if (!(email && password && full_name)) {
-      res.status(400).send('All input is required');
+      return res.status(400).send('All input is required');
     }
     const oldUser = await UserModel.findOne({ email });
 
@@ -32,7 +32,9 @@ const registerController = async (req, res) => {
     // return new user
     res.status(201).json(user);
   } catch (err) {
-    console.log(err);
+    return res
+      .status(500)
+      .json({ error: 'register_user_fail', message: 'Register user fail' });
   }
 };
 
@@ -41,12 +43,12 @@ const loginController = async (req, res) => {
     const { email, password } = req.body;
 
     if (!(email && password)) {
-      res.status(400).send('All input is required');
+      return res.status(400).send('All input is required');
     }
     const user = await UserModel.findOne({ email });
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
-      res
+      return res
         .status(400)
         .json({ error: 'invalid_credentials', message: 'Invalid Credentials' });
     }
@@ -56,9 +58,9 @@ const loginController = async (req, res) => {
     });
 
     const { _id, full_name } = user;
-    res.status(200).json({ _id, full_name, email, token });
+    return res.status(200).json({ _id, full_name, email, token });
   } catch (err) {
-    res
+    return res
       .status(500)
       .json({ error: 'invalid_credentials', message: err.message || '' });
   }
